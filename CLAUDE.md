@@ -3,6 +3,8 @@
 Auto-generated from all feature plans. Last updated: 2026-02-27
 
 ## Active Technologies
+- C# 12 / .NET 8 LTS + .NET MAUI, EF Core 8 + SQLite, System.ServiceModel.Syndication, HtmlSanitizer 9.0.892, Microsoft.Extensions.Http (002-unread-badge)
+- SQLite (existing schema; `Article.IsRead` column and all required queries already present — no migration needed) (002-unread-badge)
 
 - C# 12 / .NET 8 LTS — .NET MAUI desktop app (001-mvp-rss-reader)
 - SQLite + EF Core 8 — local-first persistence, migrations on startup
@@ -53,6 +55,7 @@ dotnet ef migrations add <Name> --project src/RSSFeedReader.Infrastructure --sta
 - Clean Architecture dependency rule: Domain ← Application ← Infrastructure ← Presentation
 
 ## Recent Changes
+- 002-unread-badge: Added C# 12 / .NET 8 LTS + .NET MAUI, EF Core 8 + SQLite, System.ServiceModel.Syndication, HtmlSanitizer 9.0.892, Microsoft.Extensions.Http
 
 - 001-mvp-rss-reader: Added C# 12 / .NET 8 LTS + MAUI + EF Core 8 + SQLite + HtmlSanitizer
 
