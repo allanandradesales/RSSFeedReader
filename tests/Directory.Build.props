@@ -1,0 +1,6 @@
+<Project>
+  <!-- Test projects use MethodName_StateUnderTest_ExpectedBehavior naming — suppress CA1707 (underscores in names) -->
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);CA1707</NoWarn>
+  </PropertyGroup>
+</Project>
