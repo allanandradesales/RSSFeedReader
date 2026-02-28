@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:RSSFeedReader.Presentation.ViewModels"
+             x:Class="RSSFeedReader.Presentation.Pages.FeedListPage"
+             x:DataType="vm:FeedListViewModel"
+             Title="My Feeds">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="16">
+
+        <!-- Add feed row -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="8" Margin="0,0,0,8">
+            <Entry Grid.Column="0"
+                   Placeholder="https://example.com/feed.rss"
+                   Text="{Binding NewFeedUrl}"
+                   Keyboard="Url"
+                   ReturnCommand="{Binding AddFeedCommand}" />
+            <Button Grid.Column="1"
+                    Text="Add"
+                    Command="{Binding AddFeedCommand}" />
+        </Grid>
+
+        <!-- Status message -->
+        <Label Grid.Row="0"
+               VerticalOptions="End"
+               Margin="0,48,0,4"
+               Text="{Binding StatusMessage}"
+               IsVisible="{Binding StatusMessage, Converter={x:StaticResource StringToBoolConverter}}"
+               TextColor="{AppThemeBinding Light=#666666, Dark=#aaaaaa}"
+               FontSize="12" />
+
+        <!-- Feed list -->
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Feeds}"
+                        EmptyView="No feeds yet. Add one above.">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid ColumnDefinitions="*,Auto" Padding="0,8">
+                        <Label Grid.Column="0"
+                               Text="{Binding Title}"
+                               FontAttributes="Bold"
+                               LineBreakMode="TailTruncation" />
+                        <Label Grid.Column="1"
+                               Text="{Binding UnreadCount}"
+                               IsVisible="{Binding UnreadCount, Converter={x:StaticResource GreaterThanZeroConverter}}"
+                               TextColor="{AppThemeBinding Light=#0066cc, Dark=#4d9fff}"
+                               FontSize="12"
+                               VerticalOptions="Center"
+                               Margin="8,0,0,0" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Activity indicator -->
+        <ActivityIndicator Grid.Row="2"
+                           IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           HorizontalOptions="Center"
+                           Margin="0,8,0,0" />
+    </Grid>
+</ContentPage>

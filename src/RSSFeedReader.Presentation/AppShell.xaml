@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="RSSFeedReader.Presentation.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:RSSFeedReader.Presentation.Pages"
+    Shell.FlyoutBehavior="Disabled"
+    Title="RSS Feed Reader">
+
+    <ShellContent
+        Title="My Feeds"
+        ContentTemplate="{DataTemplate pages:FeedListPage}"
+        Route="FeedList" />
+
+</Shell>
