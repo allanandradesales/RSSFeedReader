@@ -1,7 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using RSSFeedReader.Application.UseCases.AddFeedSubscription;
+using RSSFeedReader.Application.UseCases.GetArticlesByFeed;
 using RSSFeedReader.Application.UseCases.GetFeeds;
+using RSSFeedReader.Application.UseCases.MarkArticleAsRead;
+using RSSFeedReader.Application.UseCases.RefreshFeedSubscription;
+using RSSFeedReader.Application.UseCases.ToggleArticleReadStatus;
 using RSSFeedReader.Domain.Interfaces.Repositories;
 using RSSFeedReader.Domain.Interfaces.Services;
 using RSSFeedReader.Infrastructure.ContentSanitizer;
@@ -46,10 +50,16 @@ public static class MauiProgram
         // Application handlers
         builder.Services.AddScoped<AddFeedSubscriptionHandler>();
         builder.Services.AddScoped<GetFeedsHandler>();
+        builder.Services.AddScoped<RefreshFeedSubscriptionHandler>();
+        builder.Services.AddScoped<MarkArticleAsReadHandler>();
+        builder.Services.AddScoped<ToggleArticleReadStatusHandler>();
+        builder.Services.AddScoped<GetArticlesByFeedHandler>();
 
         // Presentation
         builder.Services.AddTransient<FeedListViewModel>();
         builder.Services.AddTransient<FeedListPage>();
+        builder.Services.AddTransient<ArticleListViewModel>();
+        builder.Services.AddTransient<ArticleListPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

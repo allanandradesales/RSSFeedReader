@@ -59,14 +59,17 @@ public sealed class ArticleRepository : IArticleRepository
             .ExecuteUpdateAsync(s => s.SetProperty(a => a.IsRead, true), cancellationToken);
 
     /// <inheritdoc/>
-    public async Task ToggleReadStatusAsync(Guid articleId, CancellationToken cancellationToken = default)
+    public async Task<bool?> ToggleReadStatusAsync(Guid articleId, CancellationToken cancellationToken = default)
     {
         var article = await _db.Articles.FindAsync([articleId], cancellationToken);
         if (article is not null)
         {
             article.IsRead = !article.IsRead;
             await _db.SaveChangesAsync(cancellationToken);
+            return article.IsRead;
         }
+
+        return null;
     }
 
     /// <inheritdoc/>

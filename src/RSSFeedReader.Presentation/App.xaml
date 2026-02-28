@@ -12,6 +12,7 @@
             </ResourceDictionary.MergedDictionaries>
             <converters:StringToBoolConverter x:Key="StringToBoolConverter" />
             <converters:GreaterThanZeroConverter x:Key="GreaterThanZeroConverter" />
+            <converters:BoolToReadLabelConverter x:Key="BoolToReadLabelConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

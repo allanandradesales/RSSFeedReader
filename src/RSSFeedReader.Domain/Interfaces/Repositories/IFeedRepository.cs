@@ -8,6 +8,9 @@ public interface IFeedRepository
     /// <summary>Returns all feed subscriptions ordered by <see cref="Feed.Title"/>.</summary>
     Task<IReadOnlyList<Feed>> GetAllAsync(CancellationToken cancellationToken = default);
 
+    /// <summary>Returns the feed with the given ID, or <see langword="null"/> if not found.</summary>
+    Task<Feed?> GetByIdAsync(Guid feedId, CancellationToken cancellationToken = default);
+
     /// <summary>Returns the feed whose URL matches <paramref name="url"/>, or <see langword="null"/>.</summary>
     Task<Feed?> GetByUrlAsync(string url, CancellationToken cancellationToken = default);
 

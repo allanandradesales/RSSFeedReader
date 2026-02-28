@@ -17,6 +17,10 @@ public sealed class FeedRepository : IFeedRepository
         await _db.Feeds.AsNoTracking().OrderBy(f => f.Title).ToListAsync(cancellationToken);
 
     /// <inheritdoc/>
+    public async Task<Feed?> GetByIdAsync(Guid feedId, CancellationToken cancellationToken = default) =>
+        await _db.Feeds.AsNoTracking().FirstOrDefaultAsync(f => f.Id == feedId, cancellationToken);
+
+    /// <inheritdoc/>
     public async Task<Feed?> GetByUrlAsync(string url, CancellationToken cancellationToken = default) =>
         await _db.Feeds.AsNoTracking().FirstOrDefaultAsync(f => f.Url == url, cancellationToken);
 

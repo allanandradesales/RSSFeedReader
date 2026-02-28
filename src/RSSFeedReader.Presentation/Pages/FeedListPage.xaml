@@ -35,11 +35,19 @@
                         EmptyView="No feeds yet. Add one above.">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Grid ColumnDefinitions="*,Auto" Padding="0,8">
+                    <Grid ColumnDefinitions="*,Auto,Auto" Padding="0,8">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.NavigateToArticlesCommand}"
+                                CommandParameter="{Binding .}" />
+                        </Grid.GestureRecognizers>
+
                         <Label Grid.Column="0"
                                Text="{Binding Title}"
                                FontAttributes="Bold"
-                               LineBreakMode="TailTruncation" />
+                               LineBreakMode="TailTruncation"
+                               VerticalOptions="Center" />
+
                         <Label Grid.Column="1"
                                Text="{Binding UnreadCount}"
                                IsVisible="{Binding UnreadCount, Converter={x:StaticResource GreaterThanZeroConverter}}"
@@ -47,6 +55,17 @@
                                FontSize="12"
                                VerticalOptions="Center"
                                Margin="8,0,0,0" />
+
+                        <Button Grid.Column="2"
+                                Text="↺"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.RefreshFeedCommand}"
+                                CommandParameter="{Binding .}"
+                                WidthRequest="36"
+                                HeightRequest="36"
+                                FontSize="16"
+                                Padding="0"
+                                Margin="4,0,0,0"
+                                VerticalOptions="Center" />
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:RSSFeedReader.Presentation.ViewModels"
+             x:Class="RSSFeedReader.Presentation.Pages.ArticleListPage"
+             x:DataType="vm:ArticleListViewModel"
+             Title="{Binding FeedTitle}">
+
+    <Grid RowDefinitions="*,Auto" Padding="16">
+
+        <!-- Article list -->
+        <CollectionView Grid.Row="0"
+                        ItemsSource="{Binding Articles}"
+                        EmptyView="No articles found.">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto" Padding="0,8" ColumnSpacing="8">
+
+                        <!-- Title -->
+                        <Label Grid.Row="0" Grid.Column="0"
+                               Text="{Binding Title}"
+                               FontAttributes="Bold"
+                               LineBreakMode="TailTruncation" />
+
+                        <!-- Toggle read button -->
+                        <Button Grid.Row="0" Grid.Column="1"
+                                Grid.RowSpan="2"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ToggleReadCommand}"
+                                CommandParameter="{Binding .}"
+                                Text="{Binding IsRead, Converter={x:StaticResource BoolToReadLabelConverter}}"
+                                FontSize="11"
+                                Padding="6,2"
+                                VerticalOptions="Center" />
+
+                        <!-- Date and read indicator row -->
+                        <StackLayout Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Spacing="8">
+                            <Label Text="{Binding PublishedAt, StringFormat='{0:MMM d, yyyy}'}"
+                                   FontSize="11"
+                                   TextColor="{AppThemeBinding Light=#666666, Dark=#aaaaaa}" />
+                            <Label Text="✓ Read"
+                                   IsVisible="{Binding IsRead}"
+                                   FontSize="11"
+                                   TextColor="{AppThemeBinding Light=#2a7a2a, Dark=#5fcc5f}" />
+                        </StackLayout>
+
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Activity indicator -->
+        <ActivityIndicator Grid.Row="1"
+                           IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           HorizontalOptions="Center"
+                           Margin="0,8,0,0" />
+    </Grid>
+</ContentPage>
