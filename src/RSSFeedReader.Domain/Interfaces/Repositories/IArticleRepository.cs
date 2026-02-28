@@ -23,8 +23,11 @@ public interface IArticleRepository
     /// <summary>Sets <see cref="Article.IsRead"/> to <see langword="true"/> for the specified article.</summary>
     Task MarkAsReadAsync(Guid articleId, CancellationToken cancellationToken = default);
 
-    /// <summary>Toggles <see cref="Article.IsRead"/> for the specified article.</summary>
-    Task ToggleReadStatusAsync(Guid articleId, CancellationToken cancellationToken = default);
+    /// <summary>
+    /// Toggles <see cref="Article.IsRead"/> for the specified article and returns the new value,
+    /// or <see langword="null"/> if the article was not found.
+    /// </summary>
+    Task<bool?> ToggleReadStatusAsync(Guid articleId, CancellationToken cancellationToken = default);
 
     /// <summary>Deletes all articles belonging to the specified feed.</summary>
     Task DeleteByFeedIdAsync(Guid feedId, CancellationToken cancellationToken = default);

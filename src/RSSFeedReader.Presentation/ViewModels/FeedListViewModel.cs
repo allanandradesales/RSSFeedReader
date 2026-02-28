@@ -3,24 +3,30 @@ using System.Windows.Input;
 using RSSFeedReader.Application.DTOs;
 using RSSFeedReader.Application.UseCases.AddFeedSubscription;
 using RSSFeedReader.Application.UseCases.GetFeeds;
+using RSSFeedReader.Application.UseCases.RefreshFeedSubscription;
 
 namespace RSSFeedReader.Presentation.ViewModels;
 
-/// <summary>ViewModel for the feed list page (US1: Subscribe to feed, view subscriptions).</summary>
+/// <summary>ViewModel for the feed list page.</summary>
 public sealed class FeedListViewModel : INotifyPropertyChanged
 {
     private readonly AddFeedSubscriptionHandler _addHandler;
     private readonly GetFeedsHandler _getHandler;
+    private readonly RefreshFeedSubscriptionHandler _refreshHandler;
 
     private bool _isBusy;
     private string _newFeedUrl = string.Empty;
     private string _statusMessage = string.Empty;
 
     /// <summary>Initializes a new instance of <see cref="FeedListViewModel"/>.</summary>
-    public FeedListViewModel(AddFeedSubscriptionHandler addHandler, GetFeedsHandler getHandler)
+    public FeedListViewModel(
+        AddFeedSubscriptionHandler addHandler,
+        GetFeedsHandler getHandler,
+        RefreshFeedSubscriptionHandler refreshHandler)
     {
         _addHandler = addHandler;
         _getHandler = getHandler;
+        _refreshHandler = refreshHandler;
 
         AddFeedCommand = new Command(
             execute: async () => await AddFeedAsync(),
@@ -29,6 +35,13 @@ public sealed class FeedListViewModel : INotifyPropertyChanged
         RefreshCommand = new Command(
             execute: async () => await LoadFeedsAsync(),
             canExecute: () => !IsBusy);
+
+        RefreshFeedCommand = new Command<FeedDto>(
+            execute: async (feed) => await RefreshFeedAsync(feed),
+            canExecute: (feed) => !IsBusy);
+
+        NavigateToArticlesCommand = new Command<FeedDto>(
+            execute: async (feed) => await NavigateToArticlesAsync(feed));
     }
 
     /// <inheritdoc/>
@@ -48,6 +61,7 @@ public sealed class FeedListViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(IsBusy));
             ((Command)AddFeedCommand).ChangeCanExecute();
             ((Command)RefreshCommand).ChangeCanExecute();
+            ((Command)RefreshFeedCommand).ChangeCanExecute();
         }
     }
 
@@ -79,8 +93,14 @@ public sealed class FeedListViewModel : INotifyPropertyChanged
     /// <summary>Gets the command that adds a new feed subscription.</summary>
     public ICommand AddFeedCommand { get; }
 
-    /// <summary>Gets the command that refreshes the feed list.</summary>
+    /// <summary>Gets the command that reloads all feeds from the database.</summary>
     public ICommand RefreshCommand { get; }
+
+    /// <summary>Gets the command that refreshes a single feed and updates its badge in-place.</summary>
+    public ICommand RefreshFeedCommand { get; }
+
+    /// <summary>Gets the command that navigates to the article list for the given feed.</summary>
+    public ICommand NavigateToArticlesCommand { get; }
 
     /// <summary>Loads all feeds from the database.</summary>
     public async Task LoadFeedsAsync()
@@ -99,6 +119,23 @@ public sealed class FeedListViewModel : INotifyPropertyChanged
         {
             IsBusy = false;
         }
+    }
+
+    /// <summary>Updates the unread count badge for the specified feed in-place.</summary>
+    public void UpdateUnreadCount(Guid feedId, int newCount)
+    {
+        var idx = -1;
+        for (var i = 0; i < Feeds.Count; i++)
+        {
+            if (Feeds[i].Id == feedId)
+            {
+                idx = i;
+                break;
+            }
+        }
+
+        if (idx >= 0)
+            Feeds[idx] = Feeds[idx] with { UnreadCount = newCount };
     }
 
     private async Task AddFeedAsync()
@@ -139,6 +176,53 @@ public sealed class FeedListViewModel : INotifyPropertyChanged
         {
             IsBusy = false;
         }
+    }
+
+    private async Task RefreshFeedAsync(FeedDto feed)
+    {
+        if (IsBusy) return;
+        IsBusy = true;
+        StatusMessage = string.Empty;
+        try
+        {
+            var result = await _refreshHandler.HandleAsync(
+                new RefreshFeedSubscriptionCommand(feed.Id, feed.Url));
+
+            if (result.IsSuccess)
+            {
+                var idx = -1;
+                for (var i = 0; i < Feeds.Count; i++)
+                {
+                    if (Feeds[i].Id == feed.Id) { idx = i; break; }
+                }
+                if (idx >= 0)
+                    Feeds[idx] = Feeds[idx] with
+                    {
+                        UnreadCount = result.NewUnreadCount,
+                        LastRefreshedAt = result.NewLastRefreshedAt,
+                    };
+            }
+            else
+            {
+                StatusMessage = result.Error == RefreshFeedError.FeedNotFound
+                    ? "Feed not found."
+                    : "Failed to refresh feed.";
+            }
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private async Task NavigateToArticlesAsync(FeedDto feed)
+    {
+        await Shell.Current.GoToAsync("ArticleList", new ShellNavigationQueryParameters
+        {
+            ["feedId"] = feed.Id.ToString(),
+            ["feedTitle"] = feed.Title,
+            ["parentVm"] = this,
+        });
     }
 
     private void OnPropertyChanged(string name) =>

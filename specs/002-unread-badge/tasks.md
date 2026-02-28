@@ -9,8 +9,8 @@
 
 **Purpose**: New Application-layer DTOs and directory scaffolding needed by all phases.
 
-- [ ] T001 Create `ArticleDto` record in `src/RSSFeedReader.Application/DTOs/ArticleDto.cs`
-- [ ] T002 Create directories: `src/RSSFeedReader.Application/UseCases/RefreshFeedSubscription/`, `MarkArticleAsRead/`, `ToggleArticleReadStatus/`
+- [X] T001 Create `ArticleDto` record in `src/RSSFeedReader.Application/DTOs/ArticleDto.cs`
+- [X] T002 Create directories: `src/RSSFeedReader.Application/UseCases/RefreshFeedSubscription/`, `MarkArticleAsRead/`, `ToggleArticleReadStatus/`
 
 ---
 
@@ -20,18 +20,18 @@
 
 **⚠️ CRITICAL**: Phases 3–5 cannot start until this phase is complete.
 
-- [ ] T003 [P] Create `RefreshFeedSubscriptionCommand` record in `src/RSSFeedReader.Application/UseCases/RefreshFeedSubscription/RefreshFeedSubscriptionCommand.cs`
-- [ ] T004 [P] Create `MarkArticleAsReadCommand` record in `src/RSSFeedReader.Application/UseCases/MarkArticleAsRead/MarkArticleAsReadCommand.cs`
-- [ ] T005 [P] Create `ToggleArticleReadStatusCommand` record in `src/RSSFeedReader.Application/UseCases/ToggleArticleReadStatus/ToggleArticleReadStatusCommand.cs`
-- [ ] T006 Implement `RefreshFeedSubscriptionHandler` in `src/RSSFeedReader.Application/UseCases/RefreshFeedSubscription/RefreshFeedSubscriptionHandler.cs` (depends on T003)
-- [ ] T007 [P] Implement `MarkArticleAsReadHandler` in `src/RSSFeedReader.Application/UseCases/MarkArticleAsRead/MarkArticleAsReadHandler.cs` (depends on T004)
-- [ ] T008 [P] Implement `ToggleArticleReadStatusHandler` in `src/RSSFeedReader.Application/UseCases/ToggleArticleReadStatus/ToggleArticleReadStatusHandler.cs` (depends on T005)
-- [ ] T009 Add `GetArticlesByFeedHandler` in `src/RSSFeedReader.Application/UseCases/GetArticlesByFeed/GetArticlesByFeedHandler.cs` + command (articles list for ArticleListPage)
-- [ ] T010 [P] Write unit tests: `RefreshFeedSubscriptionHandlerTests` in `tests/RSSFeedReader.Application.Tests/UseCases/RefreshFeedSubscriptionHandlerTests.cs`
-- [ ] T011 [P] Write unit tests: `MarkArticleAsReadHandlerTests` in `tests/RSSFeedReader.Application.Tests/UseCases/MarkArticleAsReadHandlerTests.cs`
-- [ ] T012 [P] Write unit tests: `ToggleArticleReadStatusHandlerTests` in `tests/RSSFeedReader.Application.Tests/UseCases/ToggleArticleReadStatusHandlerTests.cs`
-- [ ] T013 [P] Write integration tests: `ArticleRepositoryReadStatusTests` in `tests/RSSFeedReader.Infrastructure.Tests/Persistence/ArticleRepositoryReadStatusTests.cs`
-- [ ] T014 Register all new handlers in `src/RSSFeedReader.Presentation/MauiProgram.cs`
+- [X] T003 [P] Create `RefreshFeedSubscriptionCommand` record in `src/RSSFeedReader.Application/UseCases/RefreshFeedSubscription/RefreshFeedSubscriptionCommand.cs`
+- [X] T004 [P] Create `MarkArticleAsReadCommand` record in `src/RSSFeedReader.Application/UseCases/MarkArticleAsRead/MarkArticleAsReadCommand.cs`
+- [X] T005 [P] Create `ToggleArticleReadStatusCommand` record in `src/RSSFeedReader.Application/UseCases/ToggleArticleReadStatus/ToggleArticleReadStatusCommand.cs`
+- [X] T006 Implement `RefreshFeedSubscriptionHandler` in `src/RSSFeedReader.Application/UseCases/RefreshFeedSubscription/RefreshFeedSubscriptionHandler.cs` (depends on T003)
+- [X] T007 [P] Implement `MarkArticleAsReadHandler` in `src/RSSFeedReader.Application/UseCases/MarkArticleAsRead/MarkArticleAsReadHandler.cs` (depends on T004)
+- [X] T008 [P] Implement `ToggleArticleReadStatusHandler` in `src/RSSFeedReader.Application/UseCases/ToggleArticleReadStatus/ToggleArticleReadStatusHandler.cs` (depends on T005)
+- [X] T009 Add `GetArticlesByFeedHandler` in `src/RSSFeedReader.Application/UseCases/GetArticlesByFeed/GetArticlesByFeedHandler.cs` + command (articles list for ArticleListPage)
+- [X] T010 [P] Write unit tests: `RefreshFeedSubscriptionHandlerTests` in `tests/RSSFeedReader.Application.Tests/UseCases/RefreshFeedSubscriptionHandlerTests.cs`
+- [X] T011 [P] Write unit tests: `MarkArticleAsReadHandlerTests` in `tests/RSSFeedReader.Application.Tests/UseCases/MarkArticleAsReadHandlerTests.cs`
+- [X] T012 [P] Write unit tests: `ToggleArticleReadStatusHandlerTests` in `tests/RSSFeedReader.Application.Tests/UseCases/ToggleArticleReadStatusHandlerTests.cs`
+- [X] T013 [P] Write integration tests: `ArticleRepositoryReadStatusTests` in `tests/RSSFeedReader.Infrastructure.Tests/Persistence/ArticleRepositoryReadStatusTests.cs`
+- [X] T014 Register all new handlers in `src/RSSFeedReader.Presentation/MauiProgram.cs`
 
 **Checkpoint**: `dotnet test` for Application.Tests and Infrastructure.Tests must pass before Phase 3.
 
@@ -43,8 +43,8 @@
 
 **Independent Test**: Launch with a mix of feeds (some with unread articles, some without). Feeds with unread articles show a number badge; feeds at zero show none.
 
-- [ ] T015 [US1] Add `UpdateUnreadCount(Guid feedId, int newCount)` method to `src/RSSFeedReader.Presentation/ViewModels/FeedListViewModel.cs`
-- [ ] T016 [US1] Update `src/RSSFeedReader.Presentation/Pages/FeedListPage.xaml` feed item template: add a third `Auto` column with a Refresh icon button; verify badge Label binding is correct
+- [X] T015 [US1] Add `UpdateUnreadCount(Guid feedId, int newCount)` method to `src/RSSFeedReader.Presentation/ViewModels/FeedListViewModel.cs`
+- [X] T016 [US1] Update `src/RSSFeedReader.Presentation/Pages/FeedListPage.xaml` feed item template: add a third `Auto` column with a Refresh icon button; verify badge Label binding is correct
 
 **Checkpoint**: Badge label shows correct count; hidden at zero; Refresh button visible per feed.
 
@@ -56,9 +56,9 @@
 
 **Independent Test**: Tap Refresh on a feed. If new articles exist, badge increments immediately. No navigate-away required.
 
-- [ ] T017 [US2] Add `RefreshFeedCommand` (ICommand, takes FeedDto as parameter) to `src/RSSFeedReader.Presentation/ViewModels/FeedListViewModel.cs`
-- [ ] T018 [US2] Wire `RefreshFeedCommand` to Refresh button `CommandParameter="{Binding .}"` in `src/RSSFeedReader.Presentation/Pages/FeedListPage.xaml`
-- [ ] T019 [US2] Implement `RefreshFeedCommand` execute logic in `FeedListViewModel`: call `RefreshFeedSubscriptionHandler`, replace `FeedDto` at index using `with { UnreadCount, LastRefreshedAt }`
+- [X] T017 [US2] Add `RefreshFeedCommand` (ICommand, takes FeedDto as parameter) to `src/RSSFeedReader.Presentation/ViewModels/FeedListViewModel.cs`
+- [X] T018 [US2] Wire `RefreshFeedCommand` to Refresh button `CommandParameter="{Binding .}"` in `src/RSSFeedReader.Presentation/Pages/FeedListPage.xaml`
+- [X] T019 [US2] Implement `RefreshFeedCommand` execute logic in `FeedListViewModel`: call `RefreshFeedSubscriptionHandler`, replace `FeedDto` at index using `with { UnreadCount, LastRefreshedAt }`
 
 **Checkpoint**: Tapping Refresh updates badge in-place; status message shown on failure.
 
@@ -70,13 +70,13 @@
 
 **Independent Test**: Navigate to an article list, toggle one article as read, navigate back — badge count decremented.
 
-- [ ] T020 [US3] Create `ArticleListViewModel` in `src/RSSFeedReader.Presentation/ViewModels/ArticleListViewModel.cs` (loads articles, exposes ToggleReadCommand, holds parent FeedListViewModel ref)
-- [ ] T021 [US3] Create `ArticleListPage.xaml` in `src/RSSFeedReader.Presentation/Pages/ArticleListPage.xaml` (CollectionView with title, date, IsRead indicator, toggle button)
-- [ ] T022 [US3] Create `ArticleListPage.xaml.cs` in `src/RSSFeedReader.Presentation/Pages/ArticleListPage.xaml.cs`
-- [ ] T023 [US3] Add `NavigateToArticlesCommand` to `src/RSSFeedReader.Presentation/ViewModels/FeedListViewModel.cs` (navigates to ArticleListPage passing feedId + self reference)
-- [ ] T024 [US3] Register ArticleList Shell route in `src/RSSFeedReader.Presentation/AppShell.xaml` and `AppShell.xaml.cs`
-- [ ] T025 [US3] Register `ArticleListViewModel` and `ArticleListPage` as Transient in `src/RSSFeedReader.Presentation/MauiProgram.cs`
-- [ ] T026 [US3] Wire feed cell tap to `NavigateToArticlesCommand` in `src/RSSFeedReader.Presentation/Pages/FeedListPage.xaml`
+- [X] T020 [US3] Create `ArticleListViewModel` in `src/RSSFeedReader.Presentation/ViewModels/ArticleListViewModel.cs` (loads articles, exposes ToggleReadCommand, holds parent FeedListViewModel ref)
+- [X] T021 [US3] Create `ArticleListPage.xaml` in `src/RSSFeedReader.Presentation/Pages/ArticleListPage.xaml` (CollectionView with title, date, IsRead indicator, toggle button)
+- [X] T022 [US3] Create `ArticleListPage.xaml.cs` in `src/RSSFeedReader.Presentation/Pages/ArticleListPage.xaml.cs`
+- [X] T023 [US3] Add `NavigateToArticlesCommand` to `src/RSSFeedReader.Presentation/ViewModels/FeedListViewModel.cs` (navigates to ArticleListPage passing feedId + self reference)
+- [X] T024 [US3] Register ArticleList Shell route in `src/RSSFeedReader.Presentation/AppShell.xaml` and `AppShell.xaml.cs`
+- [X] T025 [US3] Register `ArticleListViewModel` and `ArticleListPage` as Transient in `src/RSSFeedReader.Presentation/MauiProgram.cs`
+- [X] T026 [US3] Wire feed cell tap to `NavigateToArticlesCommand` in `src/RSSFeedReader.Presentation/Pages/FeedListPage.xaml`
 
 **Checkpoint**: Tapping a feed navigates to its article list; toggling read status updates badge on navigate-back.
 
@@ -84,10 +84,10 @@
 
 ## Phase 6: Polish & Cross-Cutting
 
-- [ ] T027 Run `dotnet build src/RSSFeedReader.Application --configuration Release` and fix any analyzer errors
-- [ ] T028 Run `dotnet build src/RSSFeedReader.Infrastructure --configuration Release` and fix any analyzer errors
-- [ ] T029 Run full test suite: `dotnet test` on all three test projects; all must pass
-- [ ] T030 Commit: `feat: implement unread badge (US1–US3) — per-feed refresh, article list, toggle read status`
+- [X] T027 Run `dotnet build src/RSSFeedReader.Application --configuration Release` and fix any analyzer errors
+- [X] T028 Run `dotnet build src/RSSFeedReader.Infrastructure --configuration Release` and fix any analyzer errors
+- [X] T029 Run full test suite: `dotnet test` on all three test projects; all must pass
+- [X] T030 Commit: `feat: implement unread badge (US1–US3) — per-feed refresh, article list, toggle read status`
 
 ---
 
