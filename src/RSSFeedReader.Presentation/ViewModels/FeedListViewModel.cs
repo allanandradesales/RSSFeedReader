@@ -2,25 +2,31 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using RSSFeedReader.Application.DTOs;
 using RSSFeedReader.Application.UseCases.AddFeedSubscription;
+using RSSFeedReader.Application.UseCases.ExportSubscriptionsAsOpml;
 using RSSFeedReader.Application.UseCases.GetFeeds;
 
 namespace RSSFeedReader.Presentation.ViewModels;
 
-/// <summary>ViewModel for the feed list page (US1: Subscribe to feed, view subscriptions).</summary>
+/// <summary>ViewModel for the feed list page.</summary>
 public sealed class FeedListViewModel : INotifyPropertyChanged
 {
     private readonly AddFeedSubscriptionHandler _addHandler;
     private readonly GetFeedsHandler _getHandler;
+    private readonly ExportSubscriptionsAsOpmlHandler _exportHandler;
 
     private bool _isBusy;
     private string _newFeedUrl = string.Empty;
     private string _statusMessage = string.Empty;
 
     /// <summary>Initializes a new instance of <see cref="FeedListViewModel"/>.</summary>
-    public FeedListViewModel(AddFeedSubscriptionHandler addHandler, GetFeedsHandler getHandler)
+    public FeedListViewModel(
+        AddFeedSubscriptionHandler addHandler,
+        GetFeedsHandler getHandler,
+        ExportSubscriptionsAsOpmlHandler exportHandler)
     {
         _addHandler = addHandler;
         _getHandler = getHandler;
+        _exportHandler = exportHandler;
 
         AddFeedCommand = new Command(
             execute: async () => await AddFeedAsync(),
@@ -28,6 +34,10 @@ public sealed class FeedListViewModel : INotifyPropertyChanged
 
         RefreshCommand = new Command(
             execute: async () => await LoadFeedsAsync(),
+            canExecute: () => !IsBusy);
+
+        ExportFeedsCommand = new Command(
+            execute: async () => await ExportFeedsAsync(),
             canExecute: () => !IsBusy);
     }
 
@@ -48,6 +58,7 @@ public sealed class FeedListViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(IsBusy));
             ((Command)AddFeedCommand).ChangeCanExecute();
             ((Command)RefreshCommand).ChangeCanExecute();
+            ((Command)ExportFeedsCommand).ChangeCanExecute();
         }
     }
 
@@ -82,6 +93,9 @@ public sealed class FeedListViewModel : INotifyPropertyChanged
     /// <summary>Gets the command that refreshes the feed list.</summary>
     public ICommand RefreshCommand { get; }
 
+    /// <summary>Gets the command that exports all subscriptions as an OPML file.</summary>
+    public ICommand ExportFeedsCommand { get; }
+
     /// <summary>Loads all feeds from the database.</summary>
     public async Task LoadFeedsAsync()
     {
@@ -94,6 +108,27 @@ public sealed class FeedListViewModel : INotifyPropertyChanged
             Feeds.Clear();
             foreach (var f in feeds)
                 Feeds.Add(f);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private async Task ExportFeedsAsync()
+    {
+        if (IsBusy) return;
+        IsBusy = true;
+        StatusMessage = string.Empty;
+        try
+        {
+            var result = await _exportHandler.HandleAsync(new ExportSubscriptionsAsOpmlCommand());
+            StatusMessage = result.Error switch
+            {
+                ExportSubscriptionsAsOpmlError.NoSubscriptions => "No subscriptions to export.",
+                ExportSubscriptionsAsOpmlError.SaveFailed => $"Export failed: {result.ErrorDetail}",
+                _ => $"Exported to {result.FilePath}",
+            };
         }
         finally
         {

@@ -6,6 +6,12 @@
              x:DataType="vm:FeedListViewModel"
              Title="My Feeds">
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Export"
+                     Command="{Binding ExportFeedsCommand}"
+                     Order="Primary" />
+    </ContentPage.ToolbarItems>
+
     <Grid RowDefinitions="Auto,*,Auto" Padding="16">
 
         <!-- Add feed row -->

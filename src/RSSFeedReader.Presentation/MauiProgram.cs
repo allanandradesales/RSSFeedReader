@@ -1,11 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using RSSFeedReader.Application.UseCases.AddFeedSubscription;
+using RSSFeedReader.Application.UseCases.ExportSubscriptionsAsOpml;
 using RSSFeedReader.Application.UseCases.GetFeeds;
 using RSSFeedReader.Domain.Interfaces.Repositories;
 using RSSFeedReader.Domain.Interfaces.Services;
 using RSSFeedReader.Infrastructure.ContentSanitizer;
 using RSSFeedReader.Infrastructure.FeedFetcher;
+using RSSFeedReader.Infrastructure.OpmlExport;
 using RSSFeedReader.Infrastructure.Persistence;
 using RSSFeedReader.Infrastructure.Persistence.Repositories;
 using RSSFeedReader.Presentation.Pages;
@@ -42,10 +44,12 @@ public static class MauiProgram
         builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
         builder.Services.AddScoped<IContentSanitizerService, HtmlSanitizerAdapter>();
         builder.Services.AddScoped<IFeedFetcherService, FeedFetcherService>();
+        builder.Services.AddScoped<IOpmlFileExporter, DownloadsOpmlFileExporter>();
 
         // Application handlers
         builder.Services.AddScoped<AddFeedSubscriptionHandler>();
         builder.Services.AddScoped<GetFeedsHandler>();
+        builder.Services.AddScoped<ExportSubscriptionsAsOpmlHandler>();
 
         // Presentation
         builder.Services.AddTransient<FeedListViewModel>();
